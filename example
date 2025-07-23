@@ -1,0 +1,147 @@
+local UILib = loadstring(game:HttpGet("https://raw.githubusercontent.com/your-repo/ui-library.lua"))()
+
+-- Create UI with key system enabled
+local ui = UILib.new("Advanced Script Hub", true) -- true enables key authentication
+
+-- Wait for authentication before adding components
+spawn(function()
+    while not ui.authenticated do
+        wait(0.1)
+    end
+    
+    -- Now add all your UI components
+    ui:AddLabel("🎉 Welcome to Advanced Script Hub!", 40)
+    ui:AddSeparator()
+    
+    -- Basic Buttons
+    ui:AddButton("Test Button", function()
+        ui:ShowNotification("Button clicked!", "success")
+    end, "success")
+    
+    ui:AddButton("Warning Button", function()
+        ui:ShowNotification("Warning button pressed!", "warning")
+    end, "warning")
+    
+    ui:AddButton("Danger Button", function()
+        ui:ShowNotification("Danger button activated!", "error")
+    end, "danger")
+    
+    ui:AddSeparator()
+    
+    -- Toggle Buttons
+    ui:AddToggleButton("Auto Farm", false, function(state)
+        if state then
+            ui:ShowNotification("Auto Farm enabled!", "success")
+            -- Add your auto farm code here
+        else
+            ui:ShowNotification("Auto Farm disabled!", "info")
+            -- Stop auto farm code here
+        end
+    end)
+    
+    ui:AddToggleButton("Speed Hack", false, function(state)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            if state then
+                player.Character.Humanoid.WalkSpeed = 50
+                ui:ShowNotification("Speed hack enabled!", "success")
+            else
+                player.Character.Humanoid.WalkSpeed = 16
+                ui:ShowNotification("Speed hack disabled!", "info")
+            end
+        end
+    end)
+    
+    ui:AddSeparator()
+    
+    -- Sliders
+    ui:AddSlider("Walk Speed", 1, 100, 16, function(value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = value
+            ui:ShowNotification("Walk speed set to " .. value, "info")
+        end
+    end)
+    
+    ui:AddSlider("Jump Power", 1, 200, 50, function(value)
+        local player = game.Players.LocalPlayer
+        if player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.JumpPower = value
+            ui:ShowNotification("Jump power set to " .. value, "info")
+        end
+    end)
+    
+    ui:AddSeparator()
+    
+    -- Text Input
+    ui:AddTextBox("Enter player name to teleport", function(text)
+        local targetPlayer = nil
+        for _, player in pairs(game.Players:GetPlayers()) do
+            if string.lower(player.Name):find(string.lower(text)) then
+                targetPlayer = player
+                break
+            end
+        end
+        
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local localPlayer = game.Players.LocalPlayer
+            if localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                localPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+                ui:ShowNotification("Teleported to " .. targetPlayer.Name, "success")
+            end
+        else
+            ui:ShowNotification("Player not found!", "error")
+        end
+    end)
+    
+    ui:AddSeparator()
+    
+    -- More Advanced Features
+    ui:AddLabel("🔧 Advanced Features")
+    
+    ui:AddButton("Infinite Jump", function()
+        local player = game.Players.LocalPlayer
+        local mouse = player:GetMouse()
+        
+        mouse.KeyDown:Connect(function(key)
+            if key == " " then -- Space key
+                if player.Character and player.Character:FindFirstChild("Humanoid") then
+                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+        end)
+        
+        ui:ShowNotification("Infinite Jump activated! Press space to jump.", "success")
+    end, "secondary")
+    
+    ui:AddButton("Noclip Toggle", function()
+        local player = game.Players.LocalPlayer
+        local noclip = false
+        
+        local function toggleNoclip()
+            noclip = not noclip
+            if player.Character then
+                for _, part in pairs(player.Character:GetDescendants()) do
+                    if part:IsA("BasePart") and part.CanCollide then
+                        part.CanCollide = not noclip
+                    end
+                end
+            end
+        end
+        
+        toggleNoclip()
+        ui:ShowNotification("Noclip " .. (noclip and "enabled" or "disabled"), noclip and "success" or "info")
+    end, "secondary")
+    
+    ui:AddSeparator()
+    
+    -- Credits
+    ui:AddLabel("Made with ❤️ by Advanced UI Library")
+    ui:AddLabel("Version 1.0.0 - Premium Edition")
+end)
+
+-- Show the UI
+ui:Show()
+
+print("Advanced UI Library loaded successfully!")
+print("Please enter your key when prompted.")
