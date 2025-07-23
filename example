@@ -1,4 +1,4 @@
-local UILib = loadstring(game:HttpGet("https://raw.githubusercontent.com/your-repo/ui-library.lua"))()
+local UILib = loadstring(game:HttpGet("https://raw.githubusercontent.com/fluxScript82/uii/refs/heads/main/ui%20library.lua"))()
 
 -- Create UI with key system enabled
 local ui = UILib.new("Advanced Script Hub", true) -- true enables key authentication
